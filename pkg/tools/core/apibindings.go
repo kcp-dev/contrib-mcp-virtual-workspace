@@ -77,7 +77,7 @@ They are how consumers access shared APIs in kcp's multi-tenant model.`,
 			"properties": map[string]any{
 				"workspace": map[string]any{
 					"type":        "string",
-					"description": "Workspace ID (from list_kcp_workspaces)",
+					"description": "Logical cluster name identifying the target workspace, as returned in the 'id' field of list_kcp_workspaces (e.g. '2bbep6402zsg12x3')",
 				},
 			},
 			"required": []string{"workspace"},
@@ -141,7 +141,7 @@ They are how consumers access shared APIs in kcp's multi-tenant model.`,
 			"properties": map[string]any{
 				"workspace": map[string]any{
 					"type":        "string",
-					"description": "Workspace ID",
+					"description": "Logical cluster name identifying the target workspace, as returned in the 'id' field of list_kcp_workspaces (e.g. '2bbep6402zsg12x3')",
 				},
 				"name": map[string]any{
 					"type":        "string",

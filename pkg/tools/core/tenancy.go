@@ -79,7 +79,7 @@ WorkspaceTypes define templates for creating new workspaces, including:
 			"properties": map[string]any{
 				"workspace": map[string]any{
 					"type":        "string",
-					"description": "Workspace ID (from list_kcp_workspaces)",
+					"description": "Logical cluster name identifying the target workspace, as returned in the 'id' field of list_kcp_workspaces (e.g. '2bbep6402zsg12x3')",
 				},
 			},
 			"required": []string{"workspace"},
@@ -139,7 +139,7 @@ WorkspaceTypes define templates for creating new workspaces, including:
 			"properties": map[string]any{
 				"workspace": map[string]any{
 					"type":        "string",
-					"description": "Workspace ID",
+					"description": "Logical cluster name identifying the target workspace, as returned in the 'id' field of list_kcp_workspaces (e.g. '2bbep6402zsg12x3')",
 				},
 				"name": map[string]any{
 					"type":        "string",

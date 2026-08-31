@@ -84,7 +84,7 @@ cluster-scoped resources or to list across all namespaces.`,
 			"properties": map[string]any{
 				"workspace": map[string]any{
 					"type":        "string",
-					"description": "Workspace ID (from list_kcp_workspaces)",
+					"description": "Logical cluster name identifying the target workspace, as returned in the 'id' field of list_kcp_workspaces (e.g. '2bbep6402zsg12x3')",
 				},
 				"group": map[string]any{
 					"type":        "string",
@@ -158,7 +158,7 @@ The type is group + version + plural resource name; see list_resources.`,
 			"properties": map[string]any{
 				"workspace": map[string]any{
 					"type":        "string",
-					"description": "Workspace ID (from list_kcp_workspaces)",
+					"description": "Logical cluster name identifying the target workspace, as returned in the 'id' field of list_kcp_workspaces (e.g. '2bbep6402zsg12x3')",
 				},
 				"group": map[string]any{
 					"type":        "string",

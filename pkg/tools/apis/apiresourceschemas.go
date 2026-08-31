@@ -78,7 +78,7 @@ They contain the OpenAPI schema, validation rules, and other metadata for custom
 			"properties": map[string]any{
 				"workspace": map[string]any{
 					"type":        "string",
-					"description": "Workspace ID (from list_kcp_workspaces)",
+					"description": "Logical cluster name identifying the target workspace, as returned in the 'id' field of list_kcp_workspaces (e.g. '2bbep6402zsg12x3')",
 				},
 			},
 			"required": []string{"workspace"},
@@ -145,7 +145,7 @@ They contain the OpenAPI schema, validation rules, and other metadata for custom
 			"properties": map[string]any{
 				"workspace": map[string]any{
 					"type":        "string",
-					"description": "Workspace ID",
+					"description": "Logical cluster name identifying the target workspace, as returned in the 'id' field of list_kcp_workspaces (e.g. '2bbep6402zsg12x3')",
 				},
 				"name": map[string]any{
 					"type":        "string",

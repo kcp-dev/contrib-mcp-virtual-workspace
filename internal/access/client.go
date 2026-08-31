@@ -22,6 +22,7 @@ import (
 	"context"
 	"fmt"
 	"sort"
+	"strings"
 	"sync"
 	"time"
 
@@ -184,9 +185,10 @@ func (c *Client) Invalidate(u user.Info) {
 }
 
 func cacheKey(u user.Info) string {
-	key := u.GetName()
+	var key strings.Builder
+	key.WriteString(u.GetName())
 	for _, g := range u.GetGroups() {
-		key += "\x00" + g
+		key.WriteString("\x00" + g)
 	}
 	extra := u.GetExtra()
 	extraKeys := make([]string, 0, len(extra))
@@ -195,10 +197,10 @@ func cacheKey(u user.Info) string {
 	}
 	sort.Strings(extraKeys)
 	for _, k := range extraKeys {
-		key += "\x01" + k
+		key.WriteString("\x01" + k)
 		for _, v := range extra[k] {
-			key += "\x02" + v
+			key.WriteString("\x02" + v)
 		}
 	}
-	return key
+	return key.String()
 }

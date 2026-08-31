@@ -60,7 +60,7 @@ APIConversions define how to convert between different versions of an API.`,
 			"properties": map[string]any{
 				"workspace": map[string]any{
 					"type":        "string",
-					"description": "Workspace ID (from list_kcp_workspaces)",
+					"description": "Logical cluster name identifying the target workspace, as returned in the 'id' field of list_kcp_workspaces (e.g. '2bbep6402zsg12x3')",
 				},
 			},
 			"required": []string{"workspace"},
