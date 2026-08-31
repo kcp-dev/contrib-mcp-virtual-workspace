@@ -41,6 +41,11 @@ type ServeOptions struct {
 	SecureServing  *genericoptions.SecureServingOptions
 	Authentication *kubeoptions.BuiltInAuthenticationOptions
 
+	// OAuth optionally serves RFC 9728 protected-resource metadata and
+	// WWW-Authenticate hints so MCP clients can discover the authorization
+	// server on their own.
+	OAuth OAuthOptions
+
 	// Access resolves which workspaces a caller may use.
 	Access *access.Client
 
@@ -101,6 +106,15 @@ func Serve(ctx context.Context, opts ServeOptions) error {
 	server, err := rootapiserver.NewServer(rootCfg.Complete(), genericapiserver.NewEmptyDelegate())
 	if err != nil {
 		return fmt.Errorf("building root apiserver: %w", err)
+	}
+
+	// Wrapped after construction, not via BuildHandlerChainFunc, because the
+	// framework overwrites that hook in NewServer. Outermost on purpose: the
+	// well-known metadata must answer before the authentication filters run,
+	// and the 401 hint must decorate whatever the chain produces.
+	if opts.OAuth.Enabled() {
+		handler := server.GenericAPIServer.Handler
+		handler.FullHandlerChain = WithOAuthProtectedResource(handler.FullHandlerChain, opts.OAuth)
 	}
 
 	return server.GenericAPIServer.PrepareRun().RunWithContext(ctx)

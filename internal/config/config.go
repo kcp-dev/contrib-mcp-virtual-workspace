@@ -70,10 +70,19 @@ type KcpConfig struct {
 	Kubeconfig string
 }
 
+// OAuthConfig is the optional RFC 9728 protected-resource surface. Setting
+// AuthorizationServers enables it; see mcp.OAuthOptions.
+type OAuthConfig struct {
+	AuthorizationServers []string
+	Resource             string
+	Scopes               []string
+}
+
 // ServerConfig is the full flag surface.
 type ServerConfig struct {
 	Access AccessConfig
 	Kcp    KcpConfig
+	OAuth  OAuthConfig
 
 	// Toolsets names the tool groups this server exposes. The selection is
 	// enforced here, server-side, so it is policy rather than a client
@@ -142,6 +151,16 @@ func (c *ServerConfig) AddFlags(fs *pflag.FlagSet) {
 	fs.StringSliceVar(&c.Toolsets, "toolsets", c.Toolsets,
 		"Comma-separated toolsets to expose. Valid toolsets: "+
 			strings.Join(toolsets.Names(), ", ")+".")
+	fs.StringSliceVar(&c.OAuth.AuthorizationServers, "oauth-authorization-servers", c.OAuth.AuthorizationServers,
+		"Comma-separated OAuth 2.0 authorization server issuer URLs to advertise in "+
+			"RFC 9728 protected-resource metadata. Setting this enables the metadata "+
+			"endpoint and WWW-Authenticate discovery hints for MCP clients.")
+	fs.StringVar(&c.OAuth.Resource, "oauth-resource", c.OAuth.Resource,
+		"Canonical resource identifier advertised in protected-resource metadata, "+
+			"e.g. https://mcp.example.com/services/mcp. Empty derives it from each "+
+			"request's Host header.")
+	fs.StringSliceVar(&c.OAuth.Scopes, "oauth-scopes", c.OAuth.Scopes,
+		"Optional scopes advertised as scopes_supported in protected-resource metadata.")
 }
 
 // Validate reports configuration that cannot work.
@@ -158,6 +177,15 @@ func (c *ServerConfig) Validate() error {
 	}
 	if err := toolsets.Validate(c.Toolsets); err != nil {
 		return err
+	}
+
+	for _, as := range c.OAuth.AuthorizationServers {
+		if !strings.HasPrefix(as, "https://") {
+			return fmt.Errorf("--oauth-authorization-servers entries must be https:// issuer URLs, got %q", as)
+		}
+	}
+	if c.OAuth.Resource != "" && !strings.HasPrefix(c.OAuth.Resource, "https://") {
+		return fmt.Errorf("--oauth-resource must be an https:// URL, got %q", c.OAuth.Resource)
 	}
 
 	oidc := c.Authentication.AuthenticationConfigFile != "" ||

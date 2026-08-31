@@ -79,8 +79,13 @@ func runServe(c *cobra.Command) error {
 	return mcp.Serve(c.Context(), mcp.ServeOptions{
 		SecureServing:  serverCfg.SecureServing,
 		Authentication: serverCfg.Authentication,
-		Access:         accessClient,
-		Impersonator:   restConfig,
-		Toolsets:       serverCfg.Toolsets,
+		OAuth: mcp.OAuthOptions{
+			AuthorizationServers: serverCfg.OAuth.AuthorizationServers,
+			Resource:             serverCfg.OAuth.Resource,
+			ScopesSupported:      serverCfg.OAuth.Scopes,
+		},
+		Access:       accessClient,
+		Impersonator: restConfig,
+		Toolsets:     serverCfg.Toolsets,
 	})
 }
